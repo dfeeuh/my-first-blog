@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
-from .models import Post
-from .forms import PostForm
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 from django.views import generic
 from django.urls import reverse
 
@@ -21,7 +21,20 @@ class PostDetail(generic.DetailView):
 
     model = Post
     # The template name defaults to <app name>/<model name (lower case)_detail.html
-    #template_name = 'blog/post_detail.html'
+    template_name = 'blog/post_detail.html'
+    #form_class = CommentForm
+
+    # def form_valid(self, form):
+    #     comment = form.save(commit=False)
+    #     comment.published_date = timezone.now()
+    #     comment.save()
+    #     return redirect('post_detail', pk=comment.post.pk)
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            comments = Comment.objects.filter(post=self.object),
+            **kwargs
+        )
 
 
 class PostNew(generic.FormView):

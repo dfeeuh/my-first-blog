@@ -18,10 +18,10 @@ class Post(models.Model):
         return self.title
 
 class Comment(models.Model):
-    post = models.OneToOneField(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     author = models.CharField(max_length=50)
     text = models.TextField(max_length=300)
     created_timestamp = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.text}\n[{author}, {created_timestamp}]"
+        return f"{self.text}\n[{self.author}, {self.created_timestamp}]"
